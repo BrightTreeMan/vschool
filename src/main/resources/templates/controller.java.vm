@@ -1,0 +1,63 @@
+package ${package.Controller};
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.mansh.vschool.custom.ResultData;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
+/**
+*
+* @author ${author}
+* @since ${date}
+*/
+@RestController
+@RequestMapping("/")
+@Api(tags = "")
+public class ${table.controllerName} {
+    @Resource
+    private ${table.serviceName} userService;
+
+    @ApiOperation("新增用户")
+    @PostMapping("/userAdd")
+    public ResultData<Integer> userAdd(HttpServletRequest request, ${entity} mshUser){
+        return userService.userAdd(request,mshUser);
+    }
+
+    @ApiOperation("删除用户")
+    @ApiImplicitParam(name = "userId",value = "用户ID",required = true)
+    @DeleteMapping("/userDel/{userId}")
+    public ResultData<Integer> userDel(HttpServletRequest request,@PathVariable("userId") String userId){
+        return userService.remove(request,userId);
+    }
+
+    @ApiOperation("修改用户")
+    @PutMapping("/userEdit")
+    public ResultData<Integer> userEdit(HttpServletRequest request,${entity} mshUser){
+        return userService.userEdit(request,mshUser);
+    }
+
+    @ApiOperation("分页查询用户列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "current",value = "当前页数" , example = "1" , required = true),
+            @ApiImplicitParam(name = "size",value = "条数" , example = "10" , required = true)
+    })
+    @PostMapping("/userPage")
+    public ResultData<IPage> userPage(${entity} mshUser, @RequestParam(value="current",defaultValue = "1") long current, @RequestParam(value="size",defaultValue = "10") long size){
+        Page page = new Page(current,size);
+        return userService.userPage(page, mshUser);
+    }
+
+    @ApiOperation("获取用户列表-选择")
+    @GetMapping("/userList")
+    public ResultData<List<${entity}>> userList(){
+        return userService.userList();
+    }
+}

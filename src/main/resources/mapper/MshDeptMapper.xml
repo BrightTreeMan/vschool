@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mansh.vschool.global.dept.MshDeptMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="dept" type="com.mansh.vschool.global.dept.MshDeptEntity">
+        <id column="dept_id" property="deptId" />
+        <result column="dept_name" property="deptName" />
+        <result column="parent_dept_id" property="parentDeptId" />
+        <result column="list_order" property="listOrder" />
+        <result column="state" property="state" />
+        <result column="add_user_name" property="addUserName" />
+        <result column="add_date" property="addDate" />
+        <result column="mod_user_name" property="modUserName" />
+        <result column="mod_date" property="modDate" />
+    </resultMap>
+
+    <select id="deptPage" resultMap="dept">
+        select t.dept_id,t.dept_name,t.parent_dept_id,t.state,a.dept_name parent_dept_name,
+        t.add_user_name,t.add_date,t.mod_user_name,t.mod_date,t.list_order
+        from msh_dept t
+        left join msh_dept a
+        on t.parent_dept_id = a.dept_id
+        where 1 = 1
+        <if test="deptSearch.deptName!=null and deptSearch.deptName!=''">
+            and t.dept_Name like concat('%',#{deptSearch.deptName},'%')
+        </if>
+        <if test="deptSearch.deptId!=null and deptSearch.deptId!=''">
+            and t.dept_id = #{deptSearch.deptId}
+        </if>
+        order by t.list_order
+    </select>
+
+    <select id="deptOrder" resultType="java.lang.Integer">
+        SELECT ifnull(MAX(list_order),0) FROM msh_dept t WHERE t.parent_dept_id = #{deptId}
+    </select>
+</mapper>

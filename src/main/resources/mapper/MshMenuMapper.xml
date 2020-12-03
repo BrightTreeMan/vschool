@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mansh.vschool.global.menu.MshMenuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="menu" type="com.mansh.vschool.global.menu.MshMenuEntity">
+        <id column="menu_id" property="menuId" />
+        <result column="menu_name" property="menuName" />
+        <result column="menu_level" property="menuLevel" />
+        <result column="parent_menu_id" property="parentMenuId" />
+        <result column="icon_type" property="iconType" />
+        <result column="state" property="state" />
+        <result column="list_order" property="listOrder" />
+        <result column="url" property="url" />
+    </resultMap>
+
+    <select id="selectListByUserName" resultMap="menu">
+        SELECT distinct t.menu_id,t.menu_name,t.parent_menu_id,t.icon_type,t.url,e.list_order
+        FROM msh_menu t
+        LEFT JOIN msh_role_menu a ON t.menu_id = a.menu_id
+        LEFT JOIN msh_role b ON a.role_id = b.role_id
+        LEFT JOIN msh_user_role c ON c.role_id = b.role_id
+        LEFT JOIN msh_user d ON c.user_id = d.user_id
+        LEFT JOIN msh_menu e ON t.parent_menu_id = e.menu_id
+        WHERE d.user_name = #{userName}
+        ORDER BY e.list_order
+    </select>
+
+</mapper>

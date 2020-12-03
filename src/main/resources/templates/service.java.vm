@@ -1,0 +1,77 @@
+package ${package.Service};
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.mansh.vschool.custom.ResultData;
+import com.mansh.vschool.exception.MSHException;
+import com.mansh.vschool.utils.CommonUtils;
+import com.mansh.vschool.utils.JWTUtils;
+import com.mansh.vschool.utils.LogUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
+
+/**
+*
+* @author ${author}
+* @since ${date}
+*/
+@Service
+public class ${table.serviceName}{
+    @Resource
+    private ${table.mapperName} userMapper;
+
+    public ResultData<Integer> userAdd(HttpServletRequest request,${entity} mshUser) {
+        try {
+            int result = userMapper.insert(mshUser);
+            String desc = "新增用户成功";
+            LogUtils.addSysLog(request,"新增用户","成功",desc);
+            return new ResultData<Integer>(result).setSuccess(true);
+        } catch (Exception e) {
+            String desc = "新增用户失败";
+            LogUtils.addSysLog(request,"新增用户","失败",desc);
+            throw new MSHException("新增用户失败");
+        }
+    }
+
+    public ResultData<Integer> remove(HttpServletRequest request,String userId){
+        try {
+            QueryWrapper query = new QueryWrapper();
+            query.eq("user_id",userId);
+            int result = userMapper.delete(query);
+            String desc = "删除用户成功";
+            LogUtils.addSysLog(request,"删除用户","成功",desc);
+            return new ResultData<Integer>(result).setSuccess(true);
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            String desc = "删除用户失败";
+            LogUtils.addSysLog(request,"删除用户","失败",desc);
+            throw new MSHException("删除用户失败");
+        }
+    }
+
+    public ResultData<Integer> userEdit(HttpServletRequest request,${entity} mshUser) {
+        try {
+            int result = userMapper.updateById(mshUser);
+            String desc = "修改用户成功";
+            LogUtils.addSysLog(request,"修改用户","成功",desc);
+            return new ResultData<Integer>(result).setSuccess(true);
+        } catch (Exception e) {
+            String desc = "修改用户失败";
+            LogUtils.addSysLog(request,"修改用户","失败",desc);
+            throw new MSHException("修改用户失败");
+        }
+    }
+
+    public ResultData<IPage> userPage(IPage page, ${entity} mshUser) {
+        return new ResultData<IPage>(userMapper.getUserPage(page, mshUser)).setSuccess(true);
+    }
+
+    public ResultData<List<${entity}>> userList() {
+        return new ResultData<List<${entity}>>(userMapper.selectList(null)).setSuccess(true);
+    }
+}

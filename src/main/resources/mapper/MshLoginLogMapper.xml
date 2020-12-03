@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mansh.vschool.global.log.login_log.MshLoginLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="loginLog" type="com.mansh.vschool.global.log.login_log.MshLoginLogEntity">
+        <id column="login_log_id" property="loginLogId" />
+        <result column="login_date" property="loginDate" />
+        <result column="login_ip" property="loginIp" />
+        <result column="login_desc" property="loginDesc" />
+        <result column="login_result" property="loginResult" />
+        <result column="user_name" property="userName" />
+    </resultMap>
+
+    <select id="loginLogPage" resultMap="loginLog">
+        select t.login_log_id,t.login_date,t.login_ip,t.login_desc,t.login_result,t.user_name,a.nick_name
+        from msh_login_log t
+        left join msh_user a
+        on t.user_name = a.user_name
+        where 1 = 1
+        <if test="loginLogSearch.userName!=null and loginLogSearch.userName!=''">
+            and t.user_name = #{loginLogSearch.userName}
+        </if>
+        <if test="loginLogSearch.startDate!=null and loginLogSearch.startDate!=''">
+            and t.login_date &gt;= #{loginLogSearch.startDate}
+        </if>
+        <if test="loginLogSearch.endDate!=null and loginLogSearch.endDate!=''">
+            and t.login_date &lt;= #{loginLogSearch.endDate}
+        </if>
+        order by t.login_date desc
+    </select>
+
+</mapper>

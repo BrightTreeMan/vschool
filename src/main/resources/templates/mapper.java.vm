@@ -1,0 +1,15 @@
+package ${package.Mapper};
+
+import ${package.Entity}.${entity};
+import ${superMapperClassPackage};
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.apache.ibatis.annotations.Param;
+
+/**
+*
+* @author ${author}
+* @since ${date}
+*/
+public interface ${table.mapperName} extends ${superMapperClass}<${entity}> {
+    IPage<${entity}> getUserPage(IPage page, @Param("mshUser") ${entity} mshUser);
+}
