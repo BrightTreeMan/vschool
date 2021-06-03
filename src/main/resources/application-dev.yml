@@ -5,13 +5,20 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://10.0.251.142:9091/school?allowMulitiQueries=true&useUnicode=true&characterEncoding=UTF-8
       username: root
-      url: jdbc:mysql://10.0.251.142:9002/school?allowMulitiQueries=true&useUnicode=true&characterEncoding=UTF-8
-      password: school2020
+      password: school2021
   redis:
     host: 10.0.251.142
-    port: 9001
-    password: school2020
+    port: 9092
+    password: vschool2021
     database: 1
   elasticsearch:
-    hosts: 10.0.251.142:9003
+    hosts: 10.0.251.142:9093
+logging:
+  pattern:
+    console: "%d - %msg%n"
+  file:
+    path: /vschool
+    name: vschool.log
+
